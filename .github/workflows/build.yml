@@ -1,0 +1,81 @@
+name: 'formations'
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy-styles:
+    name: Upload Styles to Amazon S3
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-3
+
+    - name: Copy styles to S3
+      run: |
+        for dir in styles/* ; do if [ -d "$dir" ] ; then aws s3 cp "$dir".css s3://AWS_S3_BUCKET/formations/revealjs/css/theme/ && aws s3 cp "$(basename $dir)" s3://$AWS_S3_BUCKET/formations/revealjs/css/theme/"$(basename $dir)" --recursive ; fi ; done
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - run: /bin/bash -x build.sh -l fr
+
+    - run: /bin/bash -x build.sh -l en
+
+#    - name: 'slack:success'
+#      if: success()
+#      env:
+#        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+#      uses: voxmedia/github-action-slack-notify-build@v2
+#      with:
+#        channel: ${{ secrets.SLACK_CHANNEL }}
+#        status: SUCCESS
+#        color: good
+
+#  deploy-formations:
+#    name: Upload PDF to Amazon S3
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#    - name: Checkout
+#      uses: actions/checkout@v2
+#
+#    - name: Configure AWS credentials
+#      uses: aws-actions/configure-aws-credentials@v1
+#      with:
+#        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#        aws-region: us-west-3
+#
+#    - name: Copy styles to S3
+#      run: |
+#        aws s3 cp images s3://AWS_S3_BUCKET/formations/images
+#        aws s3 cp output-html s3://AWS_S3_BUCKET/formations
+#        aws s3 cp output-html s3://AWS_S3_BUCKET/formations
+#        aws s3 cp output-pdf s3://AWS_S3_BUCKET/formations/pdf
+#
+#    - name: 'slack:failure'
+#      if: failure()
+#      env:
+#        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+#      uses: voxmedia/github-action-slack-notify-build@v2
+#      with:
+#        channel: ${{ secrets.SLACK_CHANNEL }}
+#        status: failure
+#        color: danger
