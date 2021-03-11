@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy-styles:
-    name: Upload Styles to Amazon S3
+    name: Upload themes to Amazon S3
     runs-on: ubuntu-latest
     env:
       AWS_S3_BUCKET: particule-training
@@ -26,7 +26,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-west-3
 
-    - name: Copy styles to S3
+    - name: Copy themes to S3
       run: |
         for dir in styles/* ; do
           if [ -d "$dir" ] ; then
@@ -58,8 +58,8 @@ jobs:
     - name: Copy trainings to S3
       run: |
         aws s3 cp images s3://$AWS_S3_BUCKET/formations/images --recursive
-        aws s3 cp -r output-html s3://$AWS_S3_BUCKET/formations --recursive
-        aws s3 cp -r output-pdf s3://$AWS_S3_BUCKET/formations/pdf --recursive
+        aws s3 cp output-html s3://$AWS_S3_BUCKET/formations --recursive
+        aws s3 cp output-pdf s3://$AWS_S3_BUCKET/formations/pdf --recursive
 
 
     - name: 'slack:success'
