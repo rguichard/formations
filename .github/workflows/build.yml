@@ -23,6 +23,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-west-3
+        aws_s3_bucket: particule-training
 
     - name: Copy styles to S3
       run: |
@@ -48,28 +49,28 @@ jobs:
 #        status: SUCCESS
 #        color: good
 
-#  deploy-formations:
-#    name: Upload PDF to Amazon S3
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#    - name: Checkout
-#      uses: actions/checkout@v2
-#
-#    - name: Configure AWS credentials
-#      uses: aws-actions/configure-aws-credentials@v1
-#      with:
-#        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#        aws-region: us-west-3
-#
-#    - name: Copy styles to S3
-#      run: |
-#        aws s3 cp images s3://AWS_S3_BUCKET/formations/images
-#        aws s3 cp output-html s3://AWS_S3_BUCKET/formations
-#        aws s3 cp output-html s3://AWS_S3_BUCKET/formations
-#        aws s3 cp output-pdf s3://AWS_S3_BUCKET/formations/pdf
-#
+  deploy-training:
+    name: Upload trainings to Amazon S3
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-3
+        aws_s3_bucket: particule-training
+
+    - name: Copy trainings to S3
+      run: |
+        aws s3 cp images s3://AWS_S3_BUCKET/formations/images
+        aws s3 cp output-html s3://AWS_S3_BUCKET/formations
+        aws s3 cp output-pdf s3://AWS_S3_BUCKET/formations/pdf
+
 #    - name: 'slack:failure'
 #      if: failure()
 #      env:
