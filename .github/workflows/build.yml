@@ -67,9 +67,9 @@ jobs:
 
     - name: Copy trainings to S3
       run: |
-        aws s3 cp images s3://AWS_S3_BUCKET/formations/images
-        aws s3 cp output-html s3://AWS_S3_BUCKET/formations
-        aws s3 cp output-pdf s3://AWS_S3_BUCKET/formations/pdf
+        aws s3 cp -r images s3://AWS_S3_BUCKET/formations/images
+        aws s3 cp -r output-html s3://AWS_S3_BUCKET/formations
+        aws s3 cp -r output-pdf s3://AWS_S3_BUCKET/formations/pdf
 
 #    - name: 'slack:failure'
 #      if: failure()
