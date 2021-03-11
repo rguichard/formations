@@ -39,24 +39,6 @@ jobs:
 
     - run: /bin/bash -x build.sh -l en
 
-#    - name: 'slack:success'
-#      if: success()
-#      env:
-#        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-#      uses: voxmedia/github-action-slack-notify-build@v2
-#      with:
-#        channel: ${{ secrets.SLACK_CHANNEL }}
-#        status: SUCCESS
-#        color: good
-
-  deploy-training:
-    name: Upload trainings to Amazon S3
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -67,9 +49,20 @@ jobs:
 
     - name: Copy trainings to S3
       run: |
-        aws s3 cp -r images s3://AWS_S3_BUCKET/formations/images
-        aws s3 cp -r output-html s3://AWS_S3_BUCKET/formations
-        aws s3 cp -r output-pdf s3://AWS_S3_BUCKET/formations/pdf
+        aws s3 cp images s3://AWS_S3_BUCKET/formations/images --recursive
+        aws s3 cp -r output-html s3://AWS_S3_BUCKET/formations --recursive
+        aws s3 cp -r output-pdf s3://AWS_S3_BUCKET/formations/pdf --recursive
+
+
+#    - name: 'slack:success'
+#      if: success()
+#      env:
+#        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+#      uses: voxmedia/github-action-slack-notify-build@v2
+#      with:
+#        channel: ${{ secrets.SLACK_CHANNEL }}
+#        status: SUCCESS
+#        color: good
 
 #    - name: 'slack:failure'
 #      if: failure()
