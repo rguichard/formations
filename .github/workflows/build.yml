@@ -28,7 +28,12 @@ jobs:
 
     - name: Copy styles to S3
       run: |
-        for dir in styles/* ; do if [ -d "$dir" ] ; then aws s3 cp "$dir".css s3://$AWS_S3_BUCKET/formations/revealjs/css/theme/ && aws s3 cp "$(basename $dir)" s3://$AWS_S3_BUCKET/formations/revealjs/css/theme/"$(basename $dir)" --recursive ; fi ; done
+        for dir in styles/* ; do
+          if [ -d "$dir" ] ; then
+            aws s3 cp "$dir".css s3://$AWS_S3_BUCKET/formations/revealjs/css/theme/ &&
+            aws s3 cp "$(basename $dir)" s3://$AWS_S3_BUCKET/formations/revealjs/css/theme/"$(basename $dir)" --recursive ;
+          fi ;
+        done
 
   build:
     runs-on: ubuntu-latest
